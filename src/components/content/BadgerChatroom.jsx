@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import BadgerMessage from "./BadgerMessage";
+import { Container, Row, Col } from "react-bootstrap";
 
 export default function BadgerChatroom(props) {
     const [messages, setMessages] = useState([]);
@@ -29,7 +31,20 @@ export default function BadgerChatroom(props) {
             {/* TODO: Allow an authenticated user to create a post. */}
             <hr />
             {messages.length > 0 ? (
-                <>{/* TODO: Complete displaying of messages. */}</>
+                <Container>
+                    <Row>
+                        {messages.map((msg) => (
+                            <Col xs={12} md={6} lg={3} key={msg.id}>
+                                <BadgerMessage
+                                    title={msg.title}
+                                    poster={msg.poster}
+                                    content={msg.content}
+                                    created={msg.created}
+                                />
+                            </Col>
+                        ))}
+                    </Row>
+                </Container>
             ) : (
                 <>
                     <p>There are no messages on this page yet!</p>
