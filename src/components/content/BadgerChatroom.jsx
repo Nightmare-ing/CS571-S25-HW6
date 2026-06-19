@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import BadgerMessage from "./BadgerMessage";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Pagination } from "react-bootstrap";
 
 export default function BadgerChatroom(props) {
     const [messages, setMessages] = useState([]);
+    const [page, setPage] = useState(1);
 
     const loadMessages = () => {
         fetch(
-            `https://cs571.org/rest/s25/hw6/messages?chatroom=${props.name}&page=1`,
+            `https://cs571.org/rest/s25/hw6/messages?chatroom=${props.name}&page=${page}`,
             {
                 headers: {
                     "X-CS571-ID": CS571.getBadgerId(),
@@ -23,7 +24,7 @@ export default function BadgerChatroom(props) {
     // Why can't we just say []?
     // The BadgerChatroom doesn't unload/reload when switching
     // chatrooms, only its props change! Try it yourself.
-    useEffect(loadMessages, [props]);
+    useEffect(loadMessages, [props, page]);
 
     return (
         <>
@@ -50,6 +51,19 @@ export default function BadgerChatroom(props) {
                     <p>There are no messages on this page yet!</p>
                 </>
             )}
+            <Pagination>
+                {Array.from({ length: 4 }, (_, i) => i + 1).map((pageNum) => (
+                    <Pagination.Item
+                        active={pageNum === page}
+                        key={pageNum}
+                        onClick={() => {
+                            setPage(pageNum);
+                        }}
+                    >
+                        {pageNum}
+                    </Pagination.Item>
+                ))}
+            </Pagination>
         </>
     );
 }
