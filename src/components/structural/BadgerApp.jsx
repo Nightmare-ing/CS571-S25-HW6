@@ -37,7 +37,10 @@ function BadgerApp() {
                         path="/register"
                         element={<BadgerRegister />}
                     ></Route>
-                    <Route path="/logout" element={<BadgerLogout />}></Route>
+                    <Route
+                        path="/logout"
+                        element={<BadgerLogout chatrooms={chatrooms} />}
+                    ></Route>
                     {chatrooms.map((chatroom) => {
                         return (
                             <Route
