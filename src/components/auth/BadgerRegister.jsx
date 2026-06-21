@@ -1,17 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
 export default function BadgerRegister() {
     // TODO Create the register component.
-    const usernameRef = useRef();
-    const passwdRef = useRef();
-    const repeatPasswdRef = useRef();
+    const [username, setUsername] = useState("");
+    const [passwd, setPasswd] = useState("");
+    const [repeatPasswd, setRepeatPasswd] = useState("");
 
     function validatePasswd() {
-        const username = usernameRef.current.value;
-        const passwd = passwdRef.current.value;
-        const repeatPasswd = repeatPasswdRef.current.value;
-
         if (username === "" || passwd === "") {
             alert("You must provide both a username and a pin!");
             return false;
@@ -42,8 +38,8 @@ export default function BadgerRegister() {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    username: usernameRef.current.value,
-                    pin: passwdRef.current.value,
+                    username: username,
+                    pin: passwd,
                 }),
             }).then((res) => {
                 if (res.status === 200) {
@@ -60,20 +56,32 @@ export default function BadgerRegister() {
             <h1>Register</h1>
             <Form onSubmit={checkAndSubmit}>
                 <Form.Label htmlFor="username">Username</Form.Label>
-                <Form.Control id="username" ref={usernameRef}></Form.Control>
+                <Form.Control
+                    id="username"
+                    value={username}
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                    }}
+                ></Form.Control>
                 <br />
                 <Form.Label htmlFor="passwd">Password</Form.Label>
                 <Form.Control
                     id="passwd"
-                    ref={passwdRef}
+                    value={passwd}
                     type="password"
+                    onChange={(e) => {
+                        setPasswd(e.target.value);
+                    }}
                 ></Form.Control>
                 <br />
                 <Form.Label htmlFor="repeatPasswd">Repeat Password</Form.Label>
                 <Form.Control
                     id="repeatPasswd"
-                    ref={repeatPasswdRef}
                     type="password"
+                    value={repeatPasswd}
+                    onChange={(e) => {
+                        setRepeatPasswd(e.target.value);
+                    }}
                 ></Form.Control>
                 <br />
                 <Button type="submit">Register</Button>
