@@ -10,7 +10,8 @@ function BadgerLayout(props) {
     // You'll probably want to see if there is an existing
     // user in sessionStorage first. If so, that should
     // be your initial loginStatus state.
-    const [loginStatus, setLoginStatus] = useState(undefined);
+    const isLoggedIn = JSON.parse(sessionStorage.getItem("isLoggedIn"));
+    const [loginStatus, setLoginStatus] = useState(isLoggedIn ?? false);
 
     return (
         <div>
@@ -30,12 +31,21 @@ function BadgerLayout(props) {
                         <Nav.Link as={Link} to="/">
                             Home
                         </Nav.Link>
-                        <Nav.Link as={Link} to="login">
-                            Login
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="register">
-                            Register
-                        </Nav.Link>
+                        {loginStatus && (
+                            <Nav.Link as={Link} to="logout">
+                                Logout
+                            </Nav.Link>
+                        )}
+                        {!loginStatus && (
+                            <Nav.Link as={Link} to="login">
+                                Login
+                            </Nav.Link>
+                        )}
+                        {!loginStatus && (
+                            <Nav.Link as={Link} to="register">
+                                Register
+                            </Nav.Link>
+                        )}
                         <NavDropdown title="Chatrooms">
                             {props.chatrooms.map((chatroom) => (
                                 <NavDropdown.Item

@@ -1,11 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerRegister() {
     // TODO Create the register component.
     const [username, setUsername] = useState("");
     const [passwd, setPasswd] = useState("");
     const [repeatPasswd, setRepeatPasswd] = useState("");
+
+    const navigate = useNavigate();
+    const [_, setLoginStatus] = useContext(BadgerLoginStatusContext);
 
     function validatePasswd() {
         if (username === "" || passwd === "") {
@@ -44,6 +49,9 @@ export default function BadgerRegister() {
             }).then((res) => {
                 if (res.status === 200) {
                     alert("You registered successfully!");
+                    sessionStorage.setItem("isLoggedIn", "true");
+                    setLoginStatus(true);
+                    navigate("/");
                 } else if (res.status === 409) {
                     alert("That username has already been taken!");
                 }

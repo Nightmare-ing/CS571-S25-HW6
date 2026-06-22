@@ -1,10 +1,15 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerLogin() {
     // TODO Create the login component.
     const usernameRef = useRef();
     const passwdRef = useRef();
+    const [_, setLoginStatus] = useContext(BadgerLoginStatusContext);
+
+    const navigate = useNavigate();
 
     function validateLoginInfo() {
         if (
@@ -40,6 +45,9 @@ export default function BadgerLogin() {
                     alert("Incorrect username or pin!");
                 } else if (res.status === 200) {
                     alert("Login successfully!");
+                    sessionStorage.setItem("isLoggedIn", "true");
+                    setLoginStatus(true);
+                    navigate("/");
                 }
             });
         }
