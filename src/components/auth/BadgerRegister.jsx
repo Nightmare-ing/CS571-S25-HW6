@@ -48,9 +48,9 @@ export default function BadgerRegister() {
                 }),
             }).then((res) => {
                 if (res.status === 200) {
-                    alert("You registered successfully!");
                     sessionStorage.setItem("isLoggedIn", "true");
                     setLoginStatus(true);
+                    alert("You registered successfully!");
                     navigate("/");
                 } else if (res.status === 409) {
                     alert("That username has already been taken!");

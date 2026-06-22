@@ -1,6 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerLogout() {
+    const [_, setLoginStatus] = useContext(BadgerLoginStatusContext);
+
     useEffect(() => {
         fetch("https://cs571.org/rest/s25/hw6/logout", {
             method: "POST",
@@ -12,6 +15,9 @@ export default function BadgerLogout() {
             .then((res) => res.json())
             .then((json) => {
                 // Maybe you need to do something here?
+                sessionStorage.setItem("isLoggedIn", "false");
+                setLoginStatus(false);
+                alert("You have been logged out!");
             });
     }, []);
 

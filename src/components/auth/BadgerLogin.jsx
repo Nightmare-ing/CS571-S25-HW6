@@ -44,9 +44,9 @@ export default function BadgerLogin() {
                 if (res.status === 401) {
                     alert("Incorrect username or pin!");
                 } else if (res.status === 200) {
-                    alert("Login successfully!");
                     sessionStorage.setItem("isLoggedIn", "true");
                     setLoginStatus(true);
+                    alert("Login successfully!");
                     navigate("/");
                 }
             });
