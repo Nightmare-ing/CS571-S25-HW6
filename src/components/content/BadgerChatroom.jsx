@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import BadgerMessage from "./BadgerMessage";
-import { Container, Row, Col, Pagination } from "react-bootstrap";
+import { Container, Row, Col, Pagination, Form, Button } from "react-bootstrap";
+import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 export default function BadgerChatroom(props) {
     const [messages, setMessages] = useState([]);
     const [page, setPage] = useState(1);
+    const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+    const postTitleRef = useRef();
+    const postContentRef = useRef();
 
     const loadMessages = () => {
         fetch(
@@ -21,6 +25,40 @@ export default function BadgerChatroom(props) {
             });
     };
 
+    function handlePost(e) {
+        e?.preventDefault();
+        if (
+            postTitleRef.current.value === "" ||
+            postContentRef.current.value === ""
+        ) {
+            alert("You must provide both a title and content!");
+            return;
+        }
+
+        fetch(
+            `https://cs571.org/rest/s25/hw6/messages?chatroom=${props.name}`,
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "X-CS571-ID": CS571.getBadgerId(),
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: postTitleRef.current.value,
+                    content: postContentRef.current.value,
+                }),
+            },
+        ).then((res) => {
+            if (res.status === 200) {
+                alert("Successfully posted!");
+                postTitleRef.current.value = "";
+                postContentRef.current.value = "";
+                loadMessages();
+            }
+        });
+    }
+
     // Why can't we just say []?
     // The BadgerChatroom doesn't unload/reload when switching
     // chatrooms, only its props change! Try it yourself.
@@ -34,16 +72,47 @@ export default function BadgerChatroom(props) {
             {messages.length > 0 ? (
                 <Container>
                     <Row>
-                        {messages.map((msg) => (
-                            <Col xs={12} md={6} lg={3} key={msg.id}>
-                                <BadgerMessage
-                                    title={msg.title}
-                                    poster={msg.poster}
-                                    content={msg.content}
-                                    created={msg.created}
-                                />
-                            </Col>
-                        ))}
+                        <Col xs={12} md={6} lg={4}>
+                            {loginStatus ? (
+                                <Form onSubmit={handlePost}>
+                                    <Form.Label htmlFor="post-title">
+                                        Post Title
+                                    </Form.Label>
+                                    <Form.Control
+                                        id="post-title"
+                                        ref={postTitleRef}
+                                    />
+                                    <br />
+                                    <Form.Label htmlFor="post-content">
+                                        Post Content
+                                    </Form.Label>
+                                    <Form.Control
+                                        id="post-content"
+                                        ref={postContentRef}
+                                    />
+                                    <br />
+                                    <Button type="submit">Create Post</Button>
+                                </Form>
+                            ) : (
+                                <p>You must be logged in to post!</p>
+                            )}
+                        </Col>
+                        <Col>
+                            <Container>
+                                <Row>
+                                    {messages.map((msg) => (
+                                        <Col xs={12} md={6} lg={3} key={msg.id}>
+                                            <BadgerMessage
+                                                title={msg.title}
+                                                poster={msg.poster}
+                                                content={msg.content}
+                                                created={msg.created}
+                                            />
+                                        </Col>
+                                    ))}
+                                </Row>
+                            </Container>
+                        </Col>
                     </Row>
                 </Container>
             ) : (
