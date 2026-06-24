@@ -73,7 +73,7 @@ export default function BadgerChatroom(props) {
                 <Container>
                     <Row>
                         <Col xs={12} md={6} lg={4}>
-                            {loginStatus ? (
+                            {loginStatus.isLoggedIn ? (
                                 <Form onSubmit={handlePost}>
                                     <Form.Label htmlFor="post-title">
                                         Post Title

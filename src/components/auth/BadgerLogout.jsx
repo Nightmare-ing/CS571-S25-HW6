@@ -15,8 +15,12 @@ export default function BadgerLogout() {
             .then((res) => res.json())
             .then((json) => {
                 // Maybe you need to do something here?
-                sessionStorage.setItem("isLoggedIn", "false");
-                setLoginStatus(false);
+                const loginStatus = { username: "", isLoggedIn: false };
+                sessionStorage.setItem(
+                    "savedLoginStatus",
+                    JSON.stringify(loginStatus),
+                );
+                setLoginStatus(loginStatus);
                 alert("You have been logged out!");
             });
     }, []);

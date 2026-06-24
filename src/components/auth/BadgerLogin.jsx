@@ -44,8 +44,15 @@ export default function BadgerLogin() {
                 if (res.status === 401) {
                     alert("Incorrect username or pin!");
                 } else if (res.status === 200) {
-                    sessionStorage.setItem("isLoggedIn", "true");
-                    setLoginStatus(true);
+                    const loginStatus = {
+                        username: usernameRef.current.value,
+                        isLoggedIn: true,
+                    };
+                    sessionStorage.setItem(
+                        "savedLoginStatus",
+                        JSON.stringify(loginStatus),
+                    );
+                    setLoginStatus(loginStatus);
                     alert("Login successfully!");
                     navigate("/");
                 }

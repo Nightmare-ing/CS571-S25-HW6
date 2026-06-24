@@ -48,8 +48,15 @@ export default function BadgerRegister() {
                 }),
             }).then((res) => {
                 if (res.status === 200) {
-                    sessionStorage.setItem("isLoggedIn", "true");
-                    setLoginStatus(true);
+                    const loginStatus = {
+                        username: username,
+                        isLoggedIn: true,
+                    };
+                    sessionStorage.setItem(
+                        "savedLoginStatus",
+                        JSON.stringify(loginStatus),
+                    );
+                    setLoginStatus(loginStatus);
                     alert("You registered successfully!");
                     navigate("/");
                 } else if (res.status === 409) {
