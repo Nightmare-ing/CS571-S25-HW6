@@ -59,6 +59,21 @@ export default function BadgerChatroom(props) {
         });
     }
 
+    function deletePost(postId) {
+        fetch(`https://cs571.org/rest/s25/hw6/messages?id=${postId}`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "X-CS571-ID": CS571.getBadgerId(),
+            },
+        }).then((res) => {
+            if (res.status === 200) {
+                alert("Successfully deleted the post!");
+                loadMessages();
+            }
+        });
+    }
+
     // Why can't we just say []?
     // The BadgerChatroom doesn't unload/reload when switching
     // chatrooms, only its props change! Try it yourself.
@@ -103,10 +118,12 @@ export default function BadgerChatroom(props) {
                                     {messages.map((msg) => (
                                         <Col xs={12} md={6} lg={3} key={msg.id}>
                                             <BadgerMessage
+                                                id={msg.id}
                                                 title={msg.title}
                                                 poster={msg.poster}
                                                 content={msg.content}
                                                 created={msg.created}
+                                                deletePost={deletePost}
                                             />
                                         </Col>
                                     ))}
